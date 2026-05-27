@@ -43,6 +43,7 @@ CC BY-SA 4.0 Attribution-ShareAlike 4.0 International License
 #include "ESPmDNS.h"
 #include "Libraries/airgradient-client/src/common.h"
 #include "LocalServer.h"
+#include "OfflineStorage.h"
 #include "MqttClient.h"
 #include "OpenMetrics.h"
 #include "WebServer.h"
@@ -110,6 +111,7 @@ static StateMachine stateMachine(oledDisplay, Serial, measurements, configuratio
 static WifiConnector wifiConnector(oledDisplay, Serial, stateMachine, configuration);
 static OpenMetrics openMetrics(measurements, configuration, wifiConnector);
 static LocalServer localServer(Serial, openMetrics, measurements, configuration, wifiConnector);
+static OfflineStorage offlineStorage(Serial);
 static AgSerial *agSerial;
 static CellularModule *cellularCard;
 static AirgradientClient *agClient;
@@ -1454,6 +1456,7 @@ static void updatePm(void) {
   }
 }
 
+
 void postUsingWifi() {
   // Increment bootcount when send measurements data is scheduled
   int bootCount = measurements.bootCount() + 1;
@@ -1690,6 +1693,7 @@ void networkingTask(void *args) {
     if (networkOption == UseWifi) {
       wifiConnector.handle();
       if (wifiConnector.isConnected() == false) {
+        offlineStorage.handle();
         delay(1000);
         continue;
       }
