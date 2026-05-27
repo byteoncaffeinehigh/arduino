@@ -609,6 +609,21 @@ void OledDisplay::showFirmwareUpdateUpToDate(void) {
 
 #endif
 
+void OledDisplay::showOfflineMode(void) {
+  if (ag->isOne() || ag->isPro3_3() || ag->isPro4_2()) {
+    DISP()->firstPage();
+    do {
+      DISP()->setFont(u8g2_font_t0_16_tf);
+      setCentralText(40, "Offline mode");
+    } while (DISP()->nextPage());
+  } else if (ag->isBasic()) {
+    ag->display.clear();
+    ag->display.setCursor(0, 20);
+    ag->display.setText("Offline mode");
+    ag->display.show();
+  }
+}
+
 void OledDisplay::showRebooting(void) {
   if (ag->isOne() || ag->isPro3_3() || ag->isPro4_2()) {
     DISP()->firstPage();

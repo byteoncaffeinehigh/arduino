@@ -1067,11 +1067,9 @@ void initializeNetwork() {
     }
 
     if (!wifiConnector.isConnected()) {
-      Serial.println("Failed connect to WiFi");
-      oledDisplay.showRebooting();
-      delay(2500);
-      oledDisplay.setText("", "", "");
-      ESP.restart();
+      Serial.println("Failed connect to WiFi, entering offline mode");
+      oledDisplay.showOfflineMode();
+      return;
     }
 
     // Initiate local network configuration

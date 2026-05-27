@@ -63,6 +63,7 @@ public:
 
 #endif
   void showRebooting(void);
+  void showOfflineMode(void);
 };
 
 #endif /** _AG_OLED_DISPLAY_H_ */
