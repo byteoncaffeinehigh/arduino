@@ -201,6 +201,8 @@ void setup() {
   Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);
   delay(1000);
 
+  offlineStorage.begin(Wire);
+
   /** Detect board type: ONE_INDOOR has OLED display, Scan the I2C address to
    * identify board type */
   Wire.beginTransmission(OLED_I2C_ADDR);
