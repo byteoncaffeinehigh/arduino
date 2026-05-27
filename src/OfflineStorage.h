@@ -15,7 +15,7 @@ public:
   OfflineStorage(Stream &log);
 
   bool begin(TwoWire &wire);
-  void handle(void);
+  void handle(const String &payload);
 };
 
 #endif /** _OFFLINE_STORAGE_H_ */

@@ -5,14 +5,15 @@ OfflineStorage::OfflineStorage(Stream &log)
 
 bool OfflineStorage::begin(TwoWire &wire) {
   if (_isBegin) {
-    logInfo("Already initialized");
     return true;
   }
 
-  _rtc.Begin();
-
   if (!_rtc.GetIsRunning()) {
-    logError("RTC is not running or not found");
+    _rtc.SetIsRunning(true);
+  }
+
+  if (_rtc.LastError() != 0) {
+    logError("RTC not found on I2C bus");
     return false;
   }
 
@@ -21,11 +22,14 @@ bool OfflineStorage::begin(TwoWire &wire) {
   return true;
 }
 
-void OfflineStorage::handle(void) {
+void OfflineStorage::handle(const String &payload) {
   if (!_isBegin) {
     logError("Not initialized");
     return;
   }
 
-  logInfo("WiFi unavailable, offline mode active");
+  RtcDateTime now = _rtc.GetDateTime();
+  uint32_t timestamp = now.TotalSeconds();
+
+  logInfo("ts=" + String(timestamp) + " " + payload);
 }

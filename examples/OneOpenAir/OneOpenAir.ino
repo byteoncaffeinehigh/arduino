@@ -1542,7 +1542,12 @@ void sendDataToServer(void) {
   }
 
   if (networkOption == UseWifi) {
-    postUsingWifi();
+    if (wifiConnector.isConnected()) {
+      postUsingWifi();
+    } else {
+      String payload = measurements.toString(false, fwMode, 0);
+      offlineStorage.handle(payload);
+    }
   } else if (networkOption == UseCellular) {
     postUsingCellular(false);
   }
@@ -1695,7 +1700,7 @@ void networkingTask(void *args) {
     if (networkOption == UseWifi) {
       wifiConnector.handle();
       if (wifiConnector.isConnected() == false) {
-        offlineStorage.handle();
+        transmissionSchedule.run();
         delay(1000);
         continue;
       }
